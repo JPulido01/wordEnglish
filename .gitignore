@@ -1,0 +1,35 @@
+# Gradle
+.gradle
+*.iml
+gradle/gradle-daemon-jvm.properties
+
+# Salida de compilación
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Configuración local (contiene rutas del SDK, no compartir)
+local.properties
+
+# IDE - Android Studio / IntelliJ IDEA
+.idea/
+!.idea/vcs.xml
+!.idea/gradle.xml
+!.idea/compiler.xml
+!.idea/copyright/
+!.idea/dictionaries/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Firma y keystores (nunca subir al repositorio)
+*.jks
+*.keystore
+
+# Archivos de Google Services (contienen claves de API)
+google-services.json
+
+# Volcados de memoria y perfilado
+*.hprof
