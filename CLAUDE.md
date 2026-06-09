@@ -84,6 +84,38 @@ wordenglish/
 - Paquete base: `com.example.wordenglish`
 - **Convención version catalog**: dependencias AndroidX nuevas llevan prefijo `androidx-` (ej. `androidx-hilt-navigation-compose`) para evitar colisiones de accessors
 
+## Verificación end-to-end
+
+Pasos para verificar que la app y el widget funcionan correctamente en un dispositivo real.
+
+```bash
+# 1. Compilar
+./gradlew assembleDebug
+
+# 2. Instalar
+/home/jpulido/Android/Sdk/platform-tools/adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# 3. Abrir MainActivity
+/home/jpulido/Android/Sdk/platform-tools/adb shell am start -n com.example.wordenglish/.MainActivity
+
+# 4. Capturar pantalla
+/home/jpulido/Android/Sdk/platform-tools/adb shell screencap -p /sdcard/screen.png
+/home/jpulido/Android/Sdk/platform-tools/adb pull /sdcard/screen.png /tmp/screen.png
+
+# 5. Verificar widget en logcat (SUCCESS = widget actualizado correctamente)
+/home/jpulido/Android/Sdk/platform-tools/adb logcat -d 2>&1 | grep -i "wordenglish\|glance\|SessionWorker"
+```
+
+**Checklist de verificación:**
+- [ ] `assembleDebug` termina con BUILD SUCCESSFUL sin errores
+- [ ] `adb install` devuelve `Success`
+- [ ] `MainActivity` muestra los 6 intervalos con el seleccionado destacado en azul
+- [ ] Tap en un intervalo cambia la selección inmediatamente
+- [ ] Widget visible en home screen con palabra + definición correctas
+- [ ] Logcat muestra `Worker result SUCCESS for Work [...SessionWorker...]` sin excepciones
+
+**Nota:** El widget debe añadirse manualmente la primera vez (long-press en home → Widgets). No se puede instalar por adb.
+
 ## Añadir palabras
 
 Editar `app/src/main/assets/words.json`. El array de objetos `{id, word, definition}` se carga en Room en el primer arranque. El `id` debe ser único y secuencial desde 0.
