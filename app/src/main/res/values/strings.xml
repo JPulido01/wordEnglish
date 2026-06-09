@@ -3,4 +3,5 @@
     <string name="widget_description">Shows a new English word and its definition every day</string>
     <string name="widget_loading">Loading word…</string>
     <string name="add_widget_instruction">Long-press your home screen and select Widgets to add the Word of the Day widget.</string>
+    <string name="settings_interval_title">Change word every</string>
 </resources>
