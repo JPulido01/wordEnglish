@@ -4,6 +4,7 @@ import com.example.wordenglish.domain.usecase.AddToHistoryUseCase
 import com.example.wordenglish.domain.usecase.AdvanceQueueUseCase
 import com.example.wordenglish.domain.usecase.GetCurrentWordUseCase
 import com.example.wordenglish.domain.usecase.PreCacheNextWordsUseCase
+import com.example.wordenglish.notifications.NotificationSender
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -15,4 +16,5 @@ interface DailyWordWorkerEntryPoint {
     fun preCacheNextWordsUseCase(): PreCacheNextWordsUseCase
     fun getCurrentWordUseCase(): GetCurrentWordUseCase
     fun addToHistoryUseCase(): AddToHistoryUseCase
+    fun notificationSender(): NotificationSender
 }

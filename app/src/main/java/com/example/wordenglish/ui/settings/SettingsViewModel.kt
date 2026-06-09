@@ -8,6 +8,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.wordenglish.domain.model.WordInterval
 import com.example.wordenglish.domain.repository.IntervalRepository
+import com.example.wordenglish.domain.repository.NotificationRepository
 import androidx.glance.appwidget.updateAll
 import com.example.wordenglish.widget.WordWidget
 import com.example.wordenglish.worker.DailyWordWorker
@@ -22,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val intervalRepository: IntervalRepository,
+    private val notificationRepository: NotificationRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -30,6 +32,16 @@ class SettingsViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = null
     )
+
+    val notificationsEnabled = notificationRepository.isEnabled.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = true
+    )
+
+    fun setNotificationsEnabled(enabled: Boolean) {
+        viewModelScope.launch { notificationRepository.setEnabled(enabled) }
+    }
 
     fun setInterval(interval: WordInterval) {
         viewModelScope.launch {

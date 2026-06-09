@@ -19,7 +19,10 @@ class DailyWordWorker(
         )
         entryPoint.advanceQueueUseCase()()
         entryPoint.preCacheNextWordsUseCase()()
-        entryPoint.getCurrentWordUseCase()()?.let { entryPoint.addToHistoryUseCase()(it) }
+        entryPoint.getCurrentWordUseCase()()?.let {
+            entryPoint.addToHistoryUseCase()(it)
+            entryPoint.notificationSender().sendIfEnabled(it)
+        }
         WordWidget().updateAll(applicationContext)
         return Result.success()
     }
