@@ -12,6 +12,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,6 +29,11 @@ class WordRepositoryImpl @Inject constructor(
     override suspend fun getWordByIndex(index: Int): Word? {
         ensureSeeded()
         return dao.getWordByIndex(index)?.toDomain()
+    }
+
+    override suspend fun getWordById(id: Int): Word? {
+        ensureSeeded()
+        return dao.getWordById(id)?.toDomain()
     }
 
     override suspend fun getWordCount(): Int {
@@ -52,5 +59,13 @@ class WordRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun WordEntity.toDomain() = Word(id = id, word = word, definition = definition)
+    private fun WordEntity.toDomain() = Word(
+        id = id,
+        word = word,
+        definition = definition,
+        ipa = ipa,
+        examples = examples?.let { Json.decodeFromString<List<String>>(it) },
+        synonyms = synonyms?.let { Json.decodeFromString<List<String>>(it) },
+        antonyms = antonyms?.let { Json.decodeFromString<List<String>>(it) }
+    )
 }

@@ -18,7 +18,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): WordDatabase =
-        Room.databaseBuilder(context, WordDatabase::class.java, "words.db").build()
+        Room.databaseBuilder(context, WordDatabase::class.java, "words.db")
+            .addMigrations(WordDatabase.MIGRATION_1_2)
+            .build()
 
     @Provides
     fun provideWordDao(db: WordDatabase): WordDao = db.wordDao()

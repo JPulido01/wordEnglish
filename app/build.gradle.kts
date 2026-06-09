@@ -80,6 +80,14 @@ dependencies {
     // Lifecycle Runtime Compose
     implementation(libs.androidx.lifecycle.runtime.compose)
 
+    // Material Icons (para el botón de volver en WordDetailActivity)
+    implementation(libs.androidx.compose.material.icons.core)
+
+    // Retrofit + OkHttp
+    implementation(libs.retrofit.core)
+    implementation(libs.okhttp.core)
+    implementation(libs.retrofit.kotlinx.converter)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

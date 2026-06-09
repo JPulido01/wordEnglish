@@ -46,15 +46,18 @@ wordenglish/
 ├── data/
 │   ├── local/          # Room: WordEntity, WordDao, WordDatabase
 │   │   └── seed/       # WordSeedItem (@Serializable) — modelo de parseo JSON
+│   ├── remote/         # DictionaryApiService (Retrofit) · dto/DictionaryApiResponse
 │   └── repository/     # WordRepositoryImpl (seed lazy con Mutex)
 │                       # IntervalRepositoryImpl (DataStore<Preferences>)
+│                       # WordDetailRepositoryImpl (API fetch → caché Room)
 ├── domain/
-│   ├── model/          # Word · WordInterval (enum 1/3/6/8/12/24 horas)
-│   ├── repository/     # WordRepository · IntervalRepository (Flow<WordInterval?>)
-│   └── usecase/        # GetWordOfTheDayUseCase — rota por día o por horas según intervalo
-├── di/                 # AppModule · DatabaseModule · DataStoreModule
+│   ├── model/          # Word (id, word, definition, ipa?, examples?, synonyms?, antonyms?) · WordInterval
+│   ├── repository/     # WordRepository · IntervalRepository · WordDetailRepository
+│   └── usecase/        # GetWordOfTheDayUseCase · GetWordDetailUseCase (caché local → API fallback)
+├── di/                 # AppModule · DatabaseModule · DataStoreModule · NetworkModule
 ├── ui/
-│   └── settings/       # SettingsViewModel (@HiltViewModel)
+│   ├── settings/       # SettingsViewModel (@HiltViewModel)
+│   └── detail/         # WordDetailActivity · WordDetailViewModel · WordDetailScreen
 ├── widget/             # WordWidget (GlanceAppWidget) · WordWidgetReceiver · WordWidgetEntryPoint
 ├── worker/             # DailyWordWorker — WorkManager actualiza el widget según el intervalo
 ├── WordEnglishApp.kt   # @HiltAndroidApp — inyecta IntervalRepository, programa WorkManager al arrancar
@@ -71,6 +74,10 @@ wordenglish/
 - **WorkManager**: al cambiar intervalo usa `KEEP` en arranque y `UPDATE` al configurar, para no sobreescribir la elección del usuario
 - **WorkManager sin Hilt**: `DailyWordWorker` extiende `CoroutineWorker` directamente; no necesita inyección
 - **Actualización inmediata**: `SettingsViewModel.setInterval()` llama `WordWidget().updateAll(context)` tras guardar en DataStore
+- **Pantalla de detalle**: `WordDetailActivity` (@AndroidEntryPoint, `exported=false`) — se lanza desde el widget con `actionStartActivity(Intent(context, WordDetailActivity::class.java))`. Muestra IPA, ejemplos, sinónimos/antónimos
+- **API y caché**: `GetWordDetailUseCase` — carga local primero; si `ipa == null`, llama `WordDetailRepositoryImpl.fetchAndCacheDetails()`. Las listas (examples, synonyms, antonyms) se serializan como JSON String en Room
+- **Room v2**: migración 1→2 con `ALTER TABLE` para los 4 campos extra. Definida en `WordDatabase.MIGRATION_1_2` e inyectada en `DatabaseModule`
+- **Free Dictionary API**: `dictionaryapi.dev/api/v2/entries/en/{word}` — JSON ignoraUnknownKeys, coerceInputValues para robustez
 
 ## Stack y versiones
 
@@ -78,6 +85,7 @@ wordenglish/
 - **Compose BOM** 2026.02.01 · **Glance** 1.1.1
 - **Hilt** 2.59.2 · **Room** 2.8.4 · **WorkManager** 2.9.1
 - **DataStore** 1.1.4 · **Hilt Navigation Compose** 1.2.0 · **Lifecycle Runtime Compose** 2.6.1
+- **Retrofit** 2.11.0 · **OkHttp** 4.12.0 · **retrofit2-kotlinx-serialization-converter** 1.0.0
 - **KSP** 2.2.10-2.0.2 (formato `{kotlin}-{ksp}`, verificar en https://github.com/google/ksp/releases si se cambia Kotlin)
 - `android.disallowKotlinSourceSets=false` en `gradle.properties` — requerido para compatibilidad KSP con AGP 9.x
 - **minSdk** 33 · **targetSdk** 36
