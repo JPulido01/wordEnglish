@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.wordenglish.domain.repository.HistoryRepository
 import com.example.wordenglish.domain.repository.IntervalRepository
 import com.example.wordenglish.domain.repository.WordQueueRepository
 import androidx.glance.appwidget.updateAll
@@ -22,11 +23,13 @@ class WordEnglishApp : Application() {
 
     @Inject lateinit var intervalRepository: IntervalRepository
     @Inject lateinit var wordQueueRepository: WordQueueRepository
+    @Inject lateinit var historyRepository: HistoryRepository
 
     override fun onCreate() {
         super.onCreate()
         MainScope().launch {
             wordQueueRepository.initializeIfEmpty()
+            wordQueueRepository.getCurrentWord()?.let { historyRepository.add(it) }
             WordWidget().updateAll(applicationContext)
         }
         scheduleWidgetUpdate()

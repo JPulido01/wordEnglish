@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Star
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 fun HomeScreen(
     onNavigateToWordDetail: () -> Unit,
     onNavigateToFavorites: () -> Unit,
+    onNavigateToHistory: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     Scaffold { padding ->
@@ -64,6 +66,13 @@ fun HomeScreen(
                 title = "Favoritos",
                 subtitle = "Tus palabras guardadas (máx. 10)",
                 onClick = onNavigateToFavorites
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            HomeCard(
+                icon = Icons.AutoMirrored.Rounded.List,
+                title = "Historial",
+                subtitle = "Palabras que has visto antes",
+                onClick = onNavigateToHistory
             )
             Spacer(modifier = Modifier.height(16.dp))
             HomeCard(

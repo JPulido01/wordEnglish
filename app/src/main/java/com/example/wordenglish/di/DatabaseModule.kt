@@ -3,6 +3,7 @@ package com.example.wordenglish.di
 import android.content.Context
 import androidx.room.Room
 import com.example.wordenglish.data.local.FavoriteDao
+import com.example.wordenglish.data.local.HistoryDao
 import com.example.wordenglish.data.local.WordDao
 import com.example.wordenglish.data.local.WordDatabase
 import com.example.wordenglish.data.local.WordQueueDao
@@ -21,7 +22,12 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): WordDatabase =
         Room.databaseBuilder(context, WordDatabase::class.java, "words.db")
-            .addMigrations(WordDatabase.MIGRATION_1_2, WordDatabase.MIGRATION_2_3, WordDatabase.MIGRATION_3_4)
+            .addMigrations(
+                WordDatabase.MIGRATION_1_2,
+                WordDatabase.MIGRATION_2_3,
+                WordDatabase.MIGRATION_3_4,
+                WordDatabase.MIGRATION_4_5
+            )
             .build()
 
     @Provides
@@ -32,4 +38,7 @@ object DatabaseModule {
 
     @Provides
     fun provideFavoriteDao(db: WordDatabase): FavoriteDao = db.favoriteDao()
+
+    @Provides
+    fun provideHistoryDao(db: WordDatabase): HistoryDao = db.historyDao()
 }

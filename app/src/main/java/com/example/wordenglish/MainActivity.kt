@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.wordenglish.ui.detail.WordDetailScreen
 import com.example.wordenglish.ui.favorites.FavoritesScreen
+import com.example.wordenglish.ui.history.HistoryScreen
 import com.example.wordenglish.ui.home.HomeScreen
 import com.example.wordenglish.ui.review.ReviewScreen
 import com.example.wordenglish.ui.settings.SettingsScreen
@@ -40,6 +41,7 @@ private fun AppNavigation() {
             HomeScreen(
                 onNavigateToWordDetail = { navController.navigate("word_detail") },
                 onNavigateToFavorites = { navController.navigate("favorites") },
+                onNavigateToHistory = { navController.navigate("history") },
                 onNavigateToSettings = { navController.navigate("settings") }
             )
         }
@@ -52,11 +54,23 @@ private fun AppNavigation() {
         ) {
             WordDetailScreen(onNavigateBack = { navController.popBackStack() })
         }
+        composable(
+            route = "word_detail/history/{historyId}",
+            arguments = listOf(navArgument("historyId") { type = NavType.IntType })
+        ) {
+            WordDetailScreen(onNavigateBack = { navController.popBackStack() })
+        }
         composable("favorites") {
             FavoritesScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToWordDetail = { id -> navController.navigate("word_detail/$id") },
                 onNavigateToReview = { navController.navigate("review") }
+            )
+        }
+        composable("history") {
+            HistoryScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToDetail = { id -> navController.navigate("word_detail/history/$id") }
             )
         }
         composable("review") {

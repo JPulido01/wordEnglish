@@ -8,6 +8,7 @@ import com.example.wordenglish.domain.usecase.GetCurrentWordUseCase
 import com.example.wordenglish.domain.usecase.IsFavoriteUseCase
 import com.example.wordenglish.domain.usecase.ToggleFavoriteUseCase
 import com.example.wordenglish.domain.repository.FavoriteRepository
+import com.example.wordenglish.domain.repository.HistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,10 +27,12 @@ class WordDetailViewModel @Inject constructor(
     private val getCurrentWordUseCase: GetCurrentWordUseCase,
     private val isFavoriteUseCase: IsFavoriteUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
-    private val favoriteRepository: FavoriteRepository
+    private val favoriteRepository: FavoriteRepository,
+    private val historyRepository: HistoryRepository
 ) : ViewModel() {
 
     private val favoriteId: Int? = savedStateHandle.get<Int>("favoriteId")
+    private val historyId: Int? = savedStateHandle.get<Int>("historyId")
 
     private val _uiState = MutableStateFlow<DetailUiState>(DetailUiState.Loading)
     val uiState: StateFlow<DetailUiState> = _uiState
@@ -43,10 +46,10 @@ class WordDetailViewModel @Inject constructor(
 
     private fun loadWord() {
         viewModelScope.launch {
-            val word = if (favoriteId != null) {
-                favoriteRepository.getById(favoriteId)
-            } else {
-                getCurrentWordUseCase()
+            val word = when {
+                historyId != null -> historyRepository.getById(historyId)
+                favoriteId != null -> favoriteRepository.getById(favoriteId)
+                else -> getCurrentWordUseCase()
             }
             if (word == null) {
                 _uiState.value = DetailUiState.Error("No word available")

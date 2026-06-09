@@ -6,14 +6,15 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [WordEntity::class, WordQueueEntity::class, FavoriteEntity::class],
-    version = 4,
+    entities = [WordEntity::class, WordQueueEntity::class, FavoriteEntity::class, HistoryEntity::class],
+    version = 5,
     exportSchema = false
 )
 abstract class WordDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
     abstract fun wordQueueDao(): WordQueueDao
     abstract fun favoriteDao(): FavoriteDao
+    abstract fun historyDao(): HistoryDao
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -54,6 +55,23 @@ abstract class WordDatabase : RoomDatabase() {
                         synonyms TEXT,
                         antonyms TEXT,
                         addedAt INTEGER NOT NULL
+                    )"""
+                )
+            }
+        }
+
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """CREATE TABLE IF NOT EXISTS history (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        word TEXT NOT NULL,
+                        definition TEXT NOT NULL,
+                        ipa TEXT,
+                        examples TEXT,
+                        synonyms TEXT,
+                        antonyms TEXT,
+                        shownAt INTEGER NOT NULL
                     )"""
                 )
             }
