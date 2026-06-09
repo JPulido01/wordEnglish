@@ -31,11 +31,11 @@ import dagger.hilt.android.EntryPointAccessors
 class WordWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val useCase = EntryPointAccessors
-            .fromApplication(context.applicationContext, WordWidgetEntryPoint::class.java)
-            .getWordOfTheDayUseCase()
-
-        val word = runCatching { useCase() }.getOrNull()
+        val word = runCatching {
+            EntryPointAccessors
+                .fromApplication(context.applicationContext, WordWidgetEntryPoint::class.java)
+                .getCurrentWordUseCase()()
+        }.getOrNull()
 
         provideContent {
             GlanceTheme {

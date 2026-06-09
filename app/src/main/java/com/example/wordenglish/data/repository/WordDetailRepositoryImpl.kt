@@ -25,16 +25,14 @@ class WordDetailRepositoryImpl @Inject constructor(
             ?.mapNotNull { it.example }
             ?.take(3)
             ?.takeIf { it.isNotEmpty() }
-        val synonyms = entry?.meanings
-            ?.flatMap { it.synonyms }
-            ?.distinct()
-            ?.take(10)
-            ?.takeIf { it.isNotEmpty() }
-        val antonyms = entry?.meanings
-            ?.flatMap { it.antonyms }
-            ?.distinct()
-            ?.take(10)
-            ?.takeIf { it.isNotEmpty() }
+        val synonyms = (
+            (entry?.meanings?.flatMap { it.synonyms } ?: emptyList()) +
+            (entry?.meanings?.flatMap { it.definitions }?.flatMap { it.synonyms } ?: emptyList())
+        ).distinct().take(10).takeIf { it.isNotEmpty() }
+        val antonyms = (
+            (entry?.meanings?.flatMap { it.antonyms } ?: emptyList()) +
+            (entry?.meanings?.flatMap { it.definitions }?.flatMap { it.antonyms } ?: emptyList())
+        ).distinct().take(10).takeIf { it.isNotEmpty() }
 
         dao.updateWordDetails(
             id = wordId,

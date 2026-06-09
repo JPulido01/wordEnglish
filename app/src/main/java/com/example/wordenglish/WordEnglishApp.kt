@@ -5,9 +5,14 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.wordenglish.domain.repository.IntervalRepository
+import com.example.wordenglish.domain.repository.WordQueueRepository
+import androidx.glance.appwidget.updateAll
+import com.example.wordenglish.widget.WordWidget
 import com.example.wordenglish.worker.DailyWordWorker
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -16,9 +21,14 @@ import javax.inject.Inject
 class WordEnglishApp : Application() {
 
     @Inject lateinit var intervalRepository: IntervalRepository
+    @Inject lateinit var wordQueueRepository: WordQueueRepository
 
     override fun onCreate() {
         super.onCreate()
+        MainScope().launch {
+            wordQueueRepository.initializeIfEmpty()
+            WordWidget().updateAll(applicationContext)
+        }
         scheduleWidgetUpdate()
     }
 

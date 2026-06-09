@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+##Ordenes
+Toda prueba debe realizarse con la auturizacion del usuario
+No se permite hacer commits, los hace el usuario
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > Decisiones de diseño, lecciones de compatibilidad y contexto histórico en la memoria del proyecto:

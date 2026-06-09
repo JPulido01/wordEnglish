@@ -13,6 +13,9 @@ interface WordDao {
     @Query("SELECT * FROM words WHERE id = :id")
     suspend fun getWordById(id: Int): WordEntity?
 
+    @Query("SELECT * FROM words ORDER BY id")
+    suspend fun getAll(): List<WordEntity>
+
     @Query("SELECT COUNT(*) FROM words")
     suspend fun getCount(): Int
 

@@ -1,11 +1,11 @@
 package com.example.wordenglish.worker
 
 import android.content.Context
-import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.updateAll
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.wordenglish.widget.WordWidget
+import dagger.hilt.android.EntryPointAccessors
 
 class DailyWordWorker(
     context: Context,
@@ -13,6 +13,12 @@ class DailyWordWorker(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        val entryPoint = EntryPointAccessors.fromApplication(
+            applicationContext,
+            DailyWordWorkerEntryPoint::class.java
+        )
+        entryPoint.advanceQueueUseCase()()
+        entryPoint.preCacheNextWordsUseCase()()
         WordWidget().updateAll(applicationContext)
         return Result.success()
     }

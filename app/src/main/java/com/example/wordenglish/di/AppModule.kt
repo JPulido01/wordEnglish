@@ -1,10 +1,14 @@
 package com.example.wordenglish.di
 
+import com.example.wordenglish.data.repository.FavoriteRepositoryImpl
 import com.example.wordenglish.data.repository.IntervalRepositoryImpl
 import com.example.wordenglish.data.repository.WordDetailRepositoryImpl
+import com.example.wordenglish.data.repository.WordQueueRepositoryImpl
 import com.example.wordenglish.data.repository.WordRepositoryImpl
+import com.example.wordenglish.domain.repository.FavoriteRepository
 import com.example.wordenglish.domain.repository.IntervalRepository
 import com.example.wordenglish.domain.repository.WordDetailRepository
+import com.example.wordenglish.domain.repository.WordQueueRepository
 import com.example.wordenglish.domain.repository.WordRepository
 import dagger.Binds
 import dagger.Module
@@ -27,4 +31,12 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun bindWordDetailRepository(impl: WordDetailRepositoryImpl): WordDetailRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindWordQueueRepository(impl: WordQueueRepositoryImpl): WordQueueRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFavoriteRepository(impl: FavoriteRepositoryImpl): FavoriteRepository
 }

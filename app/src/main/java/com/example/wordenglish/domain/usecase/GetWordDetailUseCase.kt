@@ -11,7 +11,7 @@ class GetWordDetailUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(wordId: Int): Word? {
         val cached = wordRepository.getWordById(wordId) ?: return null
-        if (cached.ipa != null) return cached
+        if (cached.ipa != null && (cached.synonyms != null || cached.antonyms != null || cached.examples != null)) return cached
         return runCatching { detailRepository.fetchAndCacheDetails(wordId, cached.word) }
             .getOrElse { cached }
     }
