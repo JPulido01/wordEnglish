@@ -1,5 +1,7 @@
 package com.example.wordenglish.data.remote
 
-// TODO: Reemplazar con la API key de Wordnik cuando esté disponible
+import com.example.wordenglish.BuildConfig
+
+// La key se inyecta desde local.properties → BuildConfig (ver app/build.gradle.kts).
 // Registrarse en: https://developer.wordnik.com
-const val WORDNIK_API_KEY = ""
+val WORDNIK_API_KEY: String = BuildConfig.WORDNIK_API_KEY

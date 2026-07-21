@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wordenglish.domain.model.Word
-import com.example.wordenglish.domain.usecase.GetCurrentWordUseCase
+import com.example.wordenglish.domain.usecase.GetCurrentWordDetailUseCase
 import com.example.wordenglish.domain.usecase.IsFavoriteUseCase
 import com.example.wordenglish.domain.usecase.ToggleFavoriteUseCase
 import com.example.wordenglish.domain.repository.FavoriteRepository
@@ -24,7 +24,7 @@ sealed interface DetailUiState {
 @HiltViewModel
 class WordDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getCurrentWordUseCase: GetCurrentWordUseCase,
+    private val getCurrentWordDetailUseCase: GetCurrentWordDetailUseCase,
     private val isFavoriteUseCase: IsFavoriteUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
     private val favoriteRepository: FavoriteRepository,
@@ -49,7 +49,7 @@ class WordDetailViewModel @Inject constructor(
             val word = when {
                 historyId != null -> historyRepository.getById(historyId)
                 favoriteId != null -> favoriteRepository.getById(favoriteId)
-                else -> getCurrentWordUseCase()
+                else -> getCurrentWordDetailUseCase()
             }
             if (word == null) {
                 _uiState.value = DetailUiState.Error("No word available")

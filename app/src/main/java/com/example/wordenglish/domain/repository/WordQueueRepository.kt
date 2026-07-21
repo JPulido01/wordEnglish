@@ -4,6 +4,7 @@ import com.example.wordenglish.domain.model.Word
 
 interface WordQueueRepository {
     suspend fun getCurrentWord(): Word?
+    suspend fun getCurrentWordEnriched(): Word?
     suspend fun getCount(): Int
     suspend fun initializeIfEmpty()
     suspend fun advanceQueue()

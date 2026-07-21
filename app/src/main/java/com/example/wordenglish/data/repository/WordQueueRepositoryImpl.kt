@@ -26,6 +26,17 @@ class WordQueueRepositoryImpl @Inject constructor(
     override suspend fun getCurrentWord(): Word? =
         queueDao.getCurrentWord()?.toDomain()
 
+    override suspend fun getCurrentWordEnriched(): Word? {
+        val entity = queueDao.getCurrentWord() ?: return null
+        val notEnriched = entity.ipa == null && entity.examples == null &&
+            entity.synonyms == null && entity.antonyms == null
+        if (notEnriched && WORDNIK_API_KEY.isNotBlank()) {
+            runCatching { preCacheDetails(entity.id, entity.word) }
+            return queueDao.getCurrentWord()?.toDomain()
+        }
+        return entity.toDomain()
+    }
+
     override suspend fun getCount(): Int =
         queueDao.getCount()
 
